@@ -1,0 +1,17 @@
+<section>
+  <h2>{{form-title}}</h2>
+  <form class="post-form">
+{{#if postId}}
+<input name="post-id" type="hidden" value="{{postId}}">
+{{/if}}
+    <div>
+      <label for="post-title">Title</label>
+      <input type="text" id="post-title" name="post-title" value={{title}} >
+    </div>
+    <div>
+      <label for="post-url">Link</label>
+      <input id="post-url" name="post-url" value={{postUrl}} >
+    </div>
+    <button type="submit" class="btn">create</button>
+  </form>
+</section>

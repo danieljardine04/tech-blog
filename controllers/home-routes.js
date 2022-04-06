@@ -1,31 +1,16 @@
 const router = require('express').Router();
-const { Post, User, Comment } = require('../models');
+const { Post } = require('../models');
+
 
 router.get('/', (req, res) => {
-  Post.findAll({
-    attributes: [
-      'id',
-      'post_url',
-      'title',
-      'created_at'
-    ],
-    include: [
-      {
-        model: Comment,
-        attributes:L ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-        include: {
-          Model: User,
-          attributes: ['username']
-        }
-      },
-      {
-        model: User,
-        attributes: ['username']
-      }
-    ]
+  console.log("You made it here! I am going to find the post");
+  Post.findAll({ 
   })
   .then(dbPostData => {
-    const posts = dbPostData.map(post => post.get({plain: true}));
+    console.log("Got the post back!" );
+    const posts = dbPostData.map(data => data.get({plain: true}));
+    console.log("rendering", posts);
+    
 
     res.render('homepage', {
       posts,
@@ -33,36 +18,18 @@ router.get('/', (req, res) => {
     });
   })
   .catch(err => {
-    console.log(err);
+    console.log("This is actually happening",err);
     res.status(500).json(err);
   })
 })
+
 
 router.get('/post/:id', (req, res) => {
   Post.findOne({
     where: {
       id: req.params.id
     },
-    attributes: [
-      'id',
-      'post_url',
-      'title',
-      'created_at',
-    ],
-    include: [
-      {
-        model: Comment,
-        attributes: ['id', 'comment_text', 'post_id', 'user_id', 'created_at'],
-        include: {
-          model: User,
-          attributes: ['username']
-        }
-      },
-      {
-        model: User,
-        attributes: ['username']
-      }
-    ]
+    
   })
     .then(dbPostData => {
       if (!dbPostData) {
@@ -70,10 +37,10 @@ router.get('/post/:id', (req, res) => {
         return;
       }
 
-      const post = dbPostData.get({ plain: true });
+      
 
       res.render('single-post', {
-        post,
+        dbPostData,
         loggedIn: req.session.loggedIn
       });
     })
@@ -91,5 +58,9 @@ router.get('/login', (req, res) => {
 
   res.render('login');
 });
+
+router.get('/signup', (req, res) => {
+  res.render('signup');
+})
 
 module.exports = router;

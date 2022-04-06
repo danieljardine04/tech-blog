@@ -57,6 +57,7 @@ router.post("/", (req, res) => {
 
 // post route to check login username and password
 router.post("/login", (req, res) => {
+  console.log("logging in as", req.body.username)
   User.findOne({
     where: {
       username: req.body.username,
@@ -72,7 +73,7 @@ router.post("/login", (req, res) => {
       return;
     }
     req.session.save(() => {
-      req.session.username = dbUserData.id;
+      req.session.user_id = dbUserData.get({plain: true}).id;
       req.session.loggedIn = true;
       res.json({ user: dbUserData, message: "You are now logged in!" });
     });
