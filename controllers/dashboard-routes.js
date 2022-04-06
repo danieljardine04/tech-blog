@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { Post } = require('../models');
 const withAuth = require('../utils/auth');
 
-router.get('/', (req, res) => {
+router.get('/', withAuth, (req, res) => {
   console.log("The req session is ", req.session);
   Post.findAll({
     where: {
@@ -21,7 +21,7 @@ router.get('/', (req, res) => {
   });
 })
 
-router.get('/edit/:id',   (req, res) => {
+router.get('/edit/:id', withAuth,  (req, res) => {
   Post.findByPk(req.params.id, {
   
   })
